@@ -1,0 +1,7 @@
+.pixi/*
+!.pixi/config.toml
+__marimo__/
+bin/
+dependencies/
+.beast/
+.git/
