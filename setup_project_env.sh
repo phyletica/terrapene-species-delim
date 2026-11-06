@@ -9,17 +9,65 @@ clean_up() {
 }
 trap clean_up EXIT
 
-beast2_version="BEAST.v2.7.7"
-beast2_archive="${beast2_version}.Linux.x86.tgz"
-beast2_url="https://github.com/CompEvol/beast2/releases/download/v2.7.7/${beast2_archive}"
-# Git commit SHA for the "v2.7" branch of speedemon
-# speedemon_commit="1f56d1b"
-beast2_packages=("speedemon" "snapper")
-beast2_package_versions=("1.1.0" "1.1.5")
+os="$(uname -s)"
+arch="$(uname -m)"
 
+case "$os" in
+    Linux)
+        case "$arch" in
+            x86_64|amd64)   platform="linux-x86_64" ;;
+            aarch64|arm64)  platform="linux-aarch64" ;;
+            *) echo "Unsupported Linux architecture: $arch" >&2; exit 1 ;;
+        esac
+        ;;
+    Darwin)
+        platform="macos"
+        ;;
+    MINGW*|MSYS*|CYGWIN*)
+        platform="windows"
+        ;;
+    *)
+        echo "Unsupported OS: $os" >&2; exit 1
+        ;;
+esac
+
+echo "Detected platform: $platform"
 
 # Get path to directory of this script
 project_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+bin_dir="${project_dir}/bin"
+
+beast2_version="BEAST.v2.7.7"
+beast2_archive="${beast2_version}.Linux.x86.tgz"
+beast2_packages=("speedemon" "snapper")
+beast2_package_versions=("1.1.0" "1.1.5")
+
+install_beast=yes
+
+if [ "$platform" = "linux-x86_64" ]
+then
+    beast2_archive="${beast2_version}.Linux.x86.tgz"
+elif [ "$platform" = "linux-aarch64" ]
+then
+    beast2_archive="${beast2_version}.Linux.aarch64.tgz"
+else
+    install_beast=no
+    echo "Cannot automate BEAST install for platform '$platform'"
+    echo ""
+    echo "To proceed on this platform, you need to ensure that BEAST's executable"
+    echo "scripts (or symlinks to them) are in:"
+    echo "  $bin_dir"
+    echo ""
+    echo "And the following BEAST packages are insatalled:"
+    for i in "${!beast2_packages[@]}"
+    do
+        beast_package="${beast2_packages[i]}"
+        beast_package_version="${beast2_package_versions[i]}"
+        echo "$beast_package : $beast_package_version"
+    done
+fi
+
+beast2_url="https://github.com/CompEvol/beast2/releases/download/v2.7.7/${beast2_archive}"
 
 pixi_toml_path="${project_dir}/pixi.toml"
 
@@ -27,7 +75,6 @@ echo "Running pixi install ..."
 pixi install --manifest-path "$pixi_toml_path" 
 
 dep_dir="${project_dir}/dependencies"
-bin_dir="${project_dir}/bin"
 beast2_pacman_path="${bin_dir}/packagemanager"
 
 if [ ! -e "$dep_dir" ]
@@ -39,6 +86,12 @@ then
     mkdir "$bin_dir"
 fi
 
+if [ "$install_beast" = "no" ]
+then
+    echo "Skipping the installation of BEAST"
+    exit 0
+fi
+
 beast2_archive_path="${dep_dir}/${beast2_archive}"
 beast2_dir="${dep_dir}/beast"
 
@@ -47,10 +100,6 @@ if [ ! -e "$beast2_package_dir" ]
 then
     mkdir "$beast2_package_dir"
 fi
-
-# Load modules
-echo "Loading modules..."
-source "${project_dir}/modules-to-load.sh" >/dev/null 2>&1 || echo "    No modules loaded"
 
 # Get BEAST2
 if [ ! -e "$beast2_archive_path" ]
