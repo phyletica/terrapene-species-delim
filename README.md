@@ -21,7 +21,7 @@ and the SPEEDEMON package working correctly.
 To do this, we re-analyzed the *Hemidactylus* gecko data of
 [Leaché et al. (2014)](https://doi.org/10.1093/sysbio/syu018)
 that was analyzed by
-[Douglas and Bouckaert](https://doi.org/10.1038/s42003-022-03723-z)
+[Douglas and Bouckaert (2022)](https://doi.org/10.1038/s42003-022-03723-z)
 in their paper that introduced the SPEEDEMON method.
 
 ## Getting the gecko data
@@ -33,6 +33,11 @@ These data were downloaded and converted to nexus format using the
 ## Setting up BEAST xml file
 
 We used `bin/beauti` to setup the XML file for the BEAST2 SPEEDEMON analysis.
+We used the snapper template and the `data/hemi.nex` alignment and tried to
+specify settings as similar to 
+[Douglas and Bouckaert (2022)](https://doi.org/10.1038/s42003-022-03723-z)
+as possible.
+We saved the XML file from beauti as `data/hemi.xml`.
 
 # Box turtle analyses
 
