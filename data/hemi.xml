@@ -256,7 +256,7 @@ name="rawdata">
                 </prior>
             </distribution>
             <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
-                <distribution id="snapperTreeLikelihood.hemi" spec="snapper.SnapperTreeLikelihood" data="@snapper.hemi" pattern="coalescentRate" tree="@Tree.t:hemi">
+                <distribution id="snapperTreeLikelihood.hemi" spec="snapper.SnapperTreeLikelihood" data="@snapper.hemi" non-polymorphic="true" pattern="coalescentRate" tree="@Tree.t:hemi">
                     <siteModel id="SnapperSiteModel.s:hemi" spec="SiteModel">
                         <substModel id="SnapperSubstModel.s:hemi" spec="snapper.SnapSubstitutionModel" coalescentRate="@snapperCoalescentRate.t:hemi">
                             <parameter id="snapperU.s:hemi" spec="parameter.RealParameter" estimate="false" lower="0.0" name="mutationRateU">1.0</parameter>
