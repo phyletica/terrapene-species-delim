@@ -249,7 +249,7 @@ name="rawdata">
                     </Beta>
                 </prior>
                 <prior id="SnapperCoalescentRatePrior.t:hemi" name="distribution" x="@snapperCoalescentRate.t:hemi">
-                    <Gamma id="Gamma.2" mode="ShapeRate" name="distr">
+                    <Gamma id="Gamma.2" mode="ShapeScale" name="distr">
                         <parameter id="RealParameter.0" spec="parameter.RealParameter" estimate="false" name="alpha">100.0</parameter>
                         <parameter id="RealParameter.1" spec="parameter.RealParameter" estimate="false" name="beta">0.01</parameter>
                     </Gamma>
